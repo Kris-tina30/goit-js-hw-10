@@ -6,8 +6,6 @@ import { fetchCountries } from './fetchCountries';
 
 import './css/styles.css';
 
-
-
 const countryInfo = document.querySelector('.country-info');
 const countryList = document.querySelector('.country-list');
 const inputForm = document.querySelector('#search-box');
@@ -16,55 +14,60 @@ inputForm.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(e) {
   e.preventDefault();
-
-  const name = inputForm.textContent = e.target.value.trim();
-  console.log(name);
-
-  // if (name === '') {
-  //   countryInfo.innerHTML = '';
-  //   countryList.innerHTML = '';
-  //   return;
-  // }
+  cleanAreaMarkup();
+  const name = e.target.value.trim();
+  if (name === '') {
+    countryInfo.innerHTML = '';
+    countryList.innerHTML = '';
+    return;
+  }
 
   fetchCountries(name)
     .then(renderCountry)
-    .catch(error => {
-      // Error handling
-    })
+    .catch(error => {})
     .finally(() => {});
 }
-
 function renderCountry(name) {
   if (name.length > 10) {
-    return Notify.info(
-      'Too many matches found. Please enter a more specific name.'
-    );
+    Notify.info('Too many matches found. Please enter a more specific name.');
+    countryInfo.innerHTML = '';
+    countryList.innerHTML = '';
+    return;
+  } else if (2 <= name.length <= 10) {
+    countryMarkupList(name);
+  } else if (name.length === 1) {
+    countryMarkupInfo(name);
   }
-  else if (2 <= name.length <= 10) {
-    const markup = name
-      .map(({ name, flags }) => {
-        return `<li>
-              <img src="${flags.svg}" alt="${name.official}" />
-            <p>Name: ${name.official}</p>
-        </li>`;
-      })
-      .join('');
-      console.log(markup);
-    countryList.innerHTML = markup;
-    
-  }
-  // else name.length = 1;
-  // {
-  //   const markupInfo = name
-  //     .map(({ name, flags }) => {
-  //       return `
-  //       <img src="${flags.svg}" alt="${name.official}" />
-  //         <p>Name: ${name.official}</p>
-  //         <p>Capital: ${name.capital}</p>
-  //         <p>Population: ${name.population}</p>
-  //         <p>Languages: ${name.languages}</p>`;
-  //     })
-  //     .join('');
-  //   countryInfo.innerHTML = markupInfo;
-  // }
+}
+
+function cleanAreaMarkup() {
+  countryInfo.innerHTML = '';
+  countryList.innerHTML = '';
+}
+function countryMarkupList(name) {
+  const markup = name
+    .map(({ name, flags }) => {
+      return `<li>
+          <img src="${flags.svg}" alt="${name}" width = "25" height = "15" />
+        <span>${name}</span>
+    </li>`;
+    })
+    .join('');
+
+  countryList.innerHTML = markup;
+  countryInfo.innerHTML = '';
+}
+
+function countryMarkupInfo(name) {
+  const markupInfo = name
+    .map(({ name, flags, capital, population, languages }) => {
+      return `
+      <img src="${flags.svg}" alt="${name}" width = "25" height = "15" />
+      <span>${name}</span>
+          <p>Capital: ${capital}</p>
+          <p>Population: ${population}</p>
+          <p>Languages: ${languages.map(el => el.name).join(', ')}</p>`;
+    })
+    .join('');
+  countryInfo.innerHTML = markupInfo;
 }
