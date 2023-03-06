@@ -33,7 +33,7 @@ function renderCountry(name) {
     countryInfo.innerHTML = '';
     countryList.innerHTML = '';
     return;
-  } else if (2 <= name.length <= 10) {
+  } else if (name.length >=2 && name.length <= 10) {
     countryMarkupList(name);
   } else if (name.length === 1) {
     countryMarkupInfo(name);
