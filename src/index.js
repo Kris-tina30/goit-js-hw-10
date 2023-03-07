@@ -17,8 +17,6 @@ function onInput(e) {
   cleanAreaMarkup();
   const name = e.target.value.trim();
   if (name === '') {
-    countryInfo.innerHTML = '';
-    countryList.innerHTML = '';
     return;
   }
 
@@ -30,9 +28,7 @@ function onInput(e) {
 function renderCountry(name) {
   if (name.length > 10) {
     Notify.info('Too many matches found. Please enter a more specific name.');
-    countryInfo.innerHTML = '';
-    countryList.innerHTML = '';
-    return;
+    
   } else if (name.length >=2 && name.length <= 10) {
     countryMarkupList(name);
   } else if (name.length === 1) {
