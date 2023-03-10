@@ -23,7 +23,7 @@ function onInput(e) {
   fetchCountries(name)
     .then(renderCountry)
     .catch(error => {})
-    .finally(() => {});
+    
 }
 function renderCountry(name) {
   if (name.length > 10) {
@@ -51,7 +51,7 @@ function countryMarkupList(name) {
     .join('');
 
   countryList.innerHTML = markup;
-  countryInfo.innerHTML = '';
+  
 }
 
 function countryMarkupInfo(name) {
